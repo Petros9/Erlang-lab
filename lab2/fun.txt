@@ -1,0 +1,14 @@
+1./ 
+Map = fun(Mapfun, List) -> [Mapfun(X) || X <-List] end.
+test:
+Map(fun(X)->X*2 end, [1,2,3]).
+
+Filter = fun(Filterfun, List) -> [X || X <- List Filterfun(X)] end.
+test:
+Filter(fun(X) -> X == 1 end, [1,2,3]).
+
+2./
+Sumator = fun(Number) -> lists:foldl(fun(X,Y) -> X+Y end, 0, [X-48 || X <- integer_to_list(Number)]) end.         
+
+3./
+lists:filter(fun(X) -> Sumator(X) rem 3 == 0 end, [rand:uniform(1000000) || _ <- lists:seq(1, 1000000)]). 
