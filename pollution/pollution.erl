@@ -3,9 +3,9 @@
 
 % {(wpółrzędne geograficzne), nazwa stacji pomiarowych, poziom zanieczyszczenia(dwa rozne)/temperatura, data i godzina pomiaru} jako krotka
 % nie powinno być możliwe:
-  % - dodanie dwoch staji o tej samej nazwie lub wspolrzednych
-  % - dananie pomiarow o tych samych wspolrzednych, czasie, type
-  % - dodanie pomiaru do nieistniejacej stacji
+% - dodanie dwoch staji o tej samej nazwie lub wspolrzednych
+% - dananie pomiarow o tych samych wspolrzednych, czasie, type
+% - dodanie pomiaru do nieistniejacej stacji
 
 % Stacja jest listą: imie, wspolrzedne, wartosci (wartosci sa zrealizowane jako hashmapa)
 
@@ -22,11 +22,11 @@ createMonitor() -> [].
 addStation(Name, _, _) when not is_list(Name) -> throw('Name is supposed to be a list!');
 addStation(_,Coord,_) when not ?coordCorrect(Coord) -> throw('Incorect coordinates!');
 addStation(Name, {Xcoord, Ycoord}, StationList) ->
-DoesInvolve = fun(#{name := TName, coord := {TXcoord, TYcoord}})-> (TName == Name) or ({TXcoord, TYcoord} == {Xcoord, Ycoord})end,
+  DoesInvolve = fun(#{name := TName, coord := {TXcoord, TYcoord}})-> (TName == Name) or ({TXcoord, TYcoord} == {Xcoord, Ycoord})end,
   case lists:any(DoesInvolve, StationList) of
     false -> [ #{name => Name, coord => {Xcoord, Ycoord}, measurements => #{}} | StationList];
     _ -> throw('Cannot add, station with such parameters has been added!')
-end.
+  end.
 
 
 % wspolrzedne/nazwa, data, typ pomiaru, wartosc, lista
@@ -63,9 +63,9 @@ removeValue(ID, Date, Type, [H |StationList]) -> [H| removeValue(ID, Date, Type,
 
 getOneValue(_, _, _, [])  -> throw('No station with such parameters');
 getOneValue(Name, Date, Type,[#{name := Name, measurements := Measurments} | _ ])  ->
-  maps:get(#key{datetime = Date, type = Type}, Measurments);
+  maps:get(#key{datetime = Date, type = Type}, Measurments, 'No value');
 getOneValue(Coord, Date, Type,[#{coord := Coord, measurements := Measurments} | _ ])  ->
-  maps:get(#key{datetime = Date, type = Type}, Measurments);
+  maps:get(#key{datetime = Date, type = Type}, Measurments, 'No value');
 getOneValue(ID, Date, Type, [_| StationList]) -> getOneValue(ID, Date, Type, StationList).
 
 
@@ -107,7 +107,7 @@ getDailyPeak(Day ,Type, StationList) ->
     maps:values(maps:filter(fun(#key{datetime = {TDay, _}, type = TType},_) -> (TDay == Day) andalso (TType==Type)end, Measurments))end,
   Values = lists:foldl(fun(Station, Acc)-> Acc++TheValues(Station, Type) end ,[], StationList),
   MaxVal = lists:foldl(fun(Val, Acc)-> max(Val, Acc) end ,0,Values),
-  io:format("highest value: ~p", [MaxVal]).
+  MaxVal.
 
 % stacje z pomiarami ponizej sredniej
 % funkcja getTotalMean ma za zadanie policzyć srednia ze wszystkich stacji za wszystkich pomiarow

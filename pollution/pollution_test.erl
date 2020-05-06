@@ -19,10 +19,10 @@ total_test()->
     ?assertThrow('Incorect coordinates!', pollution:addStation("Mysz", {"erlang", 1}, P2)),
     ?assertThrow('Cannot add, station with such parameters has been added!', pollution:addStation("Koala", {1, 2}, P7)),
     ?assertThrow('Cannot add, station with such parameters has been added!', pollution:addStation("Szczur", {0, 0}, P7)),
-    ?assertEqual(0.5, pollution:getDailyMean({2020,04,02},"PM10", P7)), %sprawdzamy dzialie dailyMean
+    ?assertEqual(0, pollution:getDailyMean({2020,04,02},"PM10", P7)), %sprawdzamy dzialie dailyMean
     ?assertEqual(5.0, pollution:getStationMean("Koala","PM10", P7)), %spradzamy, czy dobrze liczy oraz czy usunal wczesniej wartosc 2
     ?assertThrow('No station with such parameters',pollution:getStationMean("Leopard","PM10", P7)),
     ?assertEqual(P2,pollution:getBelowTheAverage("PM10", P7)), %funkcja niespodziankowa
     ?assertEqual(9,pollution:getOneValue("Koala",{{2020,2,1},{1,2,5}},"PM10",P7)),
     pollution:getDailyPeak({2020,2,1}, "PM10", P7) % nie umiem napisac testu assert, ale najwysza wartoscia tegodnia jest 9
-].
+  ].
